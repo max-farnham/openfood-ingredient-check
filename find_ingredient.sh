@@ -39,6 +39,9 @@ for cmd in csvcut csvgrep csvformat; do
   command -v "$cmd" >/dev/null 2>&1 || { echo "ERROR: $cmd not found. Please install csvkit." >&2; exit 1; }
 done
 
+# Normalize Windows CRs (if any) into a temp file to avoid parsing issues
+tmp_csv="$(mktemp)"
+tr -d '\r' < "$CSV" > "$tmp_csv"
 
 # Pipeline: select, filter, reformat
 tmp_matches="$(mktemp)"
